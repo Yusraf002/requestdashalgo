@@ -2,6 +2,7 @@ shinyUI(
   navbarPage(
     title = img(src="algoritma logo.png", height = "40px"), id = "navBar",
     theme = "paper.css",
+    windowTitle = "Request Dashboard",
     collapsible = TRUE,
     position = "fixed-top",
     header = tags$style(
@@ -15,7 +16,7 @@ shinyUI(
     tabPanel(
       title = "HOME",
         imageOutput("banner"),
-        h4(strong("Project Description")),
+        h4(strong("Dashboard Description")),
         p(
           style = "text-align: justify; font-size = 20px",
           "Request Dashboard is a Shiny application made with
@@ -31,11 +32,11 @@ shinyUI(
         With Request Dashboard hopefully will ease Algoritma team to do request item,
         and ease Operation team to recap, manage and analyze the request data",
         
-        tags$blockquote(
-          strong(
-            "Request Dashboard is still under continuous development.
-           Please look forward to future updates!"
-          ))
+        # tags$blockquote(
+        #   strong(
+        #     "Request Dashboard is still under continuous development.
+        #    Please look forward to future updates!"
+        #   ))
         )
       ), # close of PANEL 1
  
@@ -57,7 +58,7 @@ shinyUI(
       # br(),
       # br(),
       title = "REQUEST FORM",
-      surveyOutput(df = rbind(req_date,due_dates,df2),
+      surveyOutput(df,
                    survey_title = h2("Hello, Algoritma Team!",style="text-align: center"),
                    survey_description = h4(style="text-align: center","What request application do you want to make today?"),
                    theme = "white"
@@ -97,29 +98,30 @@ shinyUI(
       tabsetPanel(
         tabPanel(title = "OVERVIEW",
                  fluidRow(
-                   column(3),
-                   column(6,
-                          box(title = h6(strong("CHOOSE THE DATE RANGE"), style = "text-align: center"),
-                            dateRangeInput("tgl",
-                                           label = NULL,
-                                           start = ymd("2023-08-08")),
-                            width = 12,
-                            height = 100
-                          )
-                          ),
-                   column(3)
-                 ),
-                 
-                 fluidRow(
-                   box(title = h5(strong("NUMBER OF REQUEST"), style = "text-align: center"),
-                       width = 12,
-                       infoBoxOutput("box_tr", width = 3),
-                       infoBoxOutput("box_rip", width = 3),
-                       infoBoxOutput("box_rd", width = 3),
-                       infoBoxOutput("box_rcb", width = 3)
+                   
+                   sidebarLayout(
+                     sidebarPanel(
+                       h5(strong("CHOOSE THE DATE RANGE"), style = "text-align: center"),
+                       width = 3,
+                       dateInput("tgls","Starting Date",value = Sys.Date()-20),
+                       dateInput("tgle","Ending Date")
+                     ),
+                     mainPanel(
+                       h5(strong("NUMBER OF REQUEST"), style = "text-align: center"),
+                       width = 9,
+                       fluidRow(
+                         column(1),
+                         infoBoxOutput("box_tr", width = 5),
+                         infoBoxOutput("box_rip", width = 5)
+                       ),
+                       fluidRow(
+                         column(1),
+                         infoBoxOutput("box_rd", width = 5),
+                         infoBoxOutput("box_rcb", width = 5)
+                       )
+                     )
                    )
                  ),
-                 
                  fluidRow(
                    box(width = 12,
                        plotOutput("plot1",height = "250px"))
@@ -137,29 +139,52 @@ shinyUI(
                  )
                  ), # close of Overview Panel
         
+        tabPanel(title = "SLA",
+          fluidRow(
+            sidebarLayout(
+              sidebarPanel(
+                h5(strong("CHOOSE THE DATE RANGE"), style = "text-align: center"),
+                width = 3,
+                dateInput("tglst","Starting Date",value = Sys.Date()-20),
+                dateInput("tglen","Ending Date")
+              ),
+              mainPanel(
+                h5(strong("SUBMITTED STATUS"), style = "text-align: center"),
+                width = 9,
+                column(6, plotOutput("plot_urgen",height = "250px")),
+                column(6, plotOutput("plot_sla",height = "250px"))
+              )
+            )
+          )
+        ), # close of SLA Panel
+        
         tabPanel(title = "DIVISION",
                  fluidRow(
-                   
-                   box(
-                     dateRangeInput("tgl1",
-                                    label = "Choose the Date Range",
-                                    start = ymd("2023-08-08")), width = 8,height = 100),
                    
                    box(selectInput("team1", 
                                    label = "Choose the Division",
                                    choices = list("Business Development", 
                                                   "Marketing",
-                                                  "Product"),
-                                   selected = "Business Development"), width = 4, height = 100)
+                                                  "Product",
+                                                  "Human Resources"),
+                                   selected = "Business Development"), width = 4, height = 100),
+                   
+                   
+                   box(
+                     dateRangeInput("tgl1",
+                                    label = "Choose the Date Range",
+                                    start = ymd("2023-08-08")), width = 8,height = 100)
+                   
                    
                    
                  ),
                  fluidRow(
-                   box(width = 8,
-                       plotOutput(outputId = "plot5", height = 250)
-                   ),
+                   
                    box(width = 4,
                        plotOutput(outputId = "plot6", height = 250)
+                   ),
+                   box(width = 8,
+                       plotOutput(outputId = "plot5", height = 250)
                    )
                  ),
                  fluidRow(

@@ -5,9 +5,8 @@ account: 9eyhxu-yusuf-rafsanjani
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 9618742
-bundleId: 7592154
+bundleId: 8612639
 url: https://9eyhxu-yusuf-rafsanjani.shinyapps.io/ReqDash/
-when: 1692604284.40065
-lastSyncTime: 1692604284.40071
 asMultiple: FALSE
 asStatic: FALSE
+ignoredFiles: trial/output.csv|trial/output2 - Copy.csv|trial/output2.csv|trial/Surveys_drafting.Rmd
